@@ -5,8 +5,6 @@ import Footer from '@/components/Footer';
 
 // The new cinematic Home page reproduces the approved scroll-driven RoboNav demo.
 const Home = lazy(() => import('@/pages/ReactScrollHome'));
-// Preserve the previous homepage at /classic-home for easy comparison.
-const ClassicHome = lazy(() => import('@/pages/Home'));
 const GridSimulator = lazy(() => import('@/pages/GridSimulator'));
 const AlgorithmComparison = lazy(() => import('@/pages/AlgorithmComparison'));
 const ExperimentLab = lazy(() => import('@/pages/ExperimentLab'));
@@ -44,7 +42,6 @@ function SiteShell() {
         <Suspense fallback={<PageFallback />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/classic-home" element={<ClassicHome />} />
             <Route path="/simulator" element={<GridSimulator />} />
             <Route path="/comparison" element={<AlgorithmComparison />} />
             <Route path="/lab" element={<ExperimentLab />} />
