@@ -20,10 +20,18 @@ app = FastAPI(title="RoboNav-3D Python API", version="1.0.0")
 
 # For local development the React site is normally served on port 5173.
 # Set ROBONAV_ALLOWED_ORIGINS to a comma-separated list for deployed domains.
+# Local development + the confirmed production React website.
+# Vercel preview domains may be added separately with the environment variable.
+# CORS uses exact browser origins: no paths or trailing slashes.
 allowed = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    *[s.strip() for s in os.getenv("ROBONAV_ALLOWED_ORIGINS", "").split(",") if s.strip()],
+    "https://robonav-3d-website.vercel.app",
+    *[
+        origin.strip().rstrip("/")
+        for origin in os.getenv("ROBONAV_ALLOWED_ORIGINS", "").split(",")
+        if origin.strip()
+    ],
 ]
 app.add_middleware(
     CORSMiddleware,
