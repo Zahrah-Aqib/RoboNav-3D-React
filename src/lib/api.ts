@@ -4,8 +4,15 @@
  */
 import type { GridState, Heuristic, Pos } from './grid';
 
+// The local dev server uses the locally running FastAPI service.
+// Production uses this NEW website's separately deployed Python backend.
+// A VITE_API_URL environment variable in Vercel can still override either
+// default, but must contain only the API origin, without /api or a slash.
 export const BACKEND_URL =
-  import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+  (import.meta.env.VITE_API_URL ||
+    (import.meta.env.PROD
+      ? 'https://robo-nav-3-d-react.vercel.app'
+      : 'http://127.0.0.1:8000')).replace(/\/$/, '');
 
 export interface RunFrame {
   explored: Pos;
