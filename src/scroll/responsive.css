@@ -1,0 +1,369 @@
+/*
+ * RoboNav responsive cinematic layout.
+ *
+ * Important: the scroll story occupies ONE browser viewport at a time.
+ * Cards must fit inside the area between the navbar and bottom progress
+ * indicator, independently of desktop resolution, zoom, or phone height.
+ *
+ * Sizing is based on the *visible viewport* (dvh), not fixed pixels.
+ * For exceptionally short windows, card scrolling is a safety fallback,
+ * so no content is hidden behind the scene's clipped stage.
+ */
+
+:host {
+  --rn-header-h: clamp(60px, 9dvh, 72px);
+  --rn-bottom-space: clamp(18px, 4.5dvh, 40px);
+}
+
+/* The page itself remains scroll-controlled; there is no iframe scroll. */
+#stage {
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+}
+
+nav {
+  height: var(--rn-header-h);
+  padding-inline: clamp(16px, 4.2vw, 68px);
+}
+
+nav .links {
+  gap: clamp(10px, 2vw, 34px);
+}
+
+/* Every scene uses the exact viewport space that is actually available. */
+.scene {
+  inset: var(--rn-header-h) 0 var(--rn-bottom-space);
+}
+
+.scene-inner {
+  width: min(1200px, 92%);
+  min-height: 0;
+}
+
+/* Shared responsive typography and spacing for all four content cards. */
+.card {
+  box-sizing: border-box;
+  padding: clamp(13px, 2.4dvh, 24px) clamp(15px, 2.3vw, 28px);
+}
+
+.card h2 {
+  font-size: clamp(23px, 2.8vw, 38px);
+  line-height: 1.11;
+  margin-bottom: clamp(7px, 1.3dvh, 12px);
+}
+
+.card p {
+  font-size: clamp(12px, 1.85dvh, 16px);
+  line-height: 1.48;
+  margin: 0;
+}
+
+.eyebrow {
+  font-size: clamp(10px, 1.5dvh, 12px);
+  margin-bottom: clamp(8px, 1.7dvh, 18px);
+  letter-spacing: clamp(1.2px, .2vw, 3px);
+}
+
+.btns {
+  flex-wrap: wrap;
+  gap: clamp(7px, 1.1vw, 12px);
+  margin-top: clamp(9px, 1.8dvh, 20px);
+}
+
+.btn {
+  padding: clamp(8px, 1.4dvh, 13px) clamp(11px, 1.5vw, 20px);
+  font-size: clamp(11px, 1.5dvh, 13px);
+  line-height: 1.25;
+  text-align: center;
+}
+
+/* Desktop cards center vertically instead of using a fixed percentage top.
+ * The first screenshot shows the old 17% offset was what pushed the final
+ * 170px grid and buttons below the visible screen.
+ */
+.scene-one .card,
+.scene-three .card,
+.scene-four .card {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  max-height: calc(100% - 14px);
+  overflow-y: auto;   /* Only active if even the compact layout can't fit. */
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #2aa4ba #10263a;
+}
+
+.scene-one .card {
+  right: 2.5%;
+  width: min(44%, 510px);
+}
+
+.scene-three .card {
+  left: 1.5%;
+  width: min(44%, 530px);
+}
+
+.scene-four .card {
+  left: 1.5%;
+  width: min(48%, 610px);
+}
+
+/* The sample map is illustrative, not actual search output.
+ * It scales WITH THE VIEWPORT instead of always taking 170px.
+ */
+.scene-four .gridbox {
+  height: clamp(82px, 19dvh, 155px);
+  min-height: 0;
+  margin-block: clamp(7px, 1.6dvh, 16px);
+  padding: clamp(4px, .75dvh, 8px);
+  gap: clamp(1px, .35dvh, 3px);
+}
+
+/* Keep the hero title and the two-algorithm captions visible on laptops. */
+.scene-zero .topText {
+  top: 50%;
+  transform: translateY(-50%);
+  max-height: calc(100% - 16px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  width: min(48%, 550px);
+}
+
+.scene-two .caption {
+  top: clamp(12px, 7%, 50px);
+}
+
+.algo-row {
+  bottom: clamp(8px, 3%, 24px);
+  gap: clamp(8px, 1vw, 16px);
+}
+
+.algo-row .card {
+  padding: clamp(10px, 2dvh, 19px);
+}
+
+.algo-row .card h3 {
+  font-size: clamp(13px, 1.9vw, 18px);
+  margin-bottom: 4px;
+}
+
+.algo-row .card p {
+  font-size: clamp(11px, 1.5dvh, 13px);
+}
+
+#scrollHint {
+  bottom: clamp(31px, 6dvh, 70px);
+}
+
+#note {
+  bottom: clamp(10px, 2dvh, 23px);
+}
+
+#counter {
+  bottom: clamp(10px, 2dvh, 23px);
+}
+
+/* Tablets / narrower browser windows. */
+@media (max-width: 1024px) {
+  .scene-one .card,
+  .scene-three .card,
+  .scene-four .card {
+    width: min(53%, 560px);
+  }
+
+  .robot-anchor {
+    width: clamp(190px, 27vw, 290px);
+    height: auto;
+    aspect-ratio: 300 / 370;
+  }
+}
+
+/* Portrait phone: make the final scene a vertical composition.
+ * Robot at the top, complete card near the bottom, not overlapping.
+ */
+@media (max-width: 700px) {
+  :host {
+    --rn-header-h: 62px;
+    --rn-bottom-space: 12px;
+  }
+
+  nav {
+    padding-inline: 16px;
+  }
+
+  nav .cta {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .scene-inner {
+    width: 94%;
+  }
+
+  .robot-anchor {
+    width: clamp(128px, 39vw, 205px);
+    height: auto;
+    aspect-ratio: 300 / 370;
+  }
+
+  .scene-one .card,
+  .scene-three .card {
+    width: min(78%, 430px);
+    max-height: 64%;
+    padding: 14px;
+  }
+
+  .scene-one .card {
+    right: 1%;
+    top: 58%;
+  }
+
+  .scene-three .card {
+    left: 1%;
+    top: 56%;
+  }
+
+  .scene-four .card {
+    top: auto;
+    bottom: 7px;
+    left: 1%;
+    right: 1%;
+    transform: none;
+    width: 98%;
+    max-height: min(65%, 510px);
+    padding: clamp(10px, 2dvh, 17px);
+  }
+
+  .scene-four .card h2 {
+    font-size: clamp(22px, 6vw, 29px);
+  }
+
+  .scene-four .gridbox {
+    height: clamp(78px, 15dvh, 125px);
+    margin-block: 7px;
+  }
+
+  .scene-four .card p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .scene-four .btns {
+    gap: 7px;
+    margin-top: 9px;
+  }
+
+  .scene-four .btn {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .scene-zero .topText {
+    top: 38%;
+    width: min(70%, 340px);
+  }
+
+  .scene-zero .title {
+    font-size: clamp(37px, 10vw, 55px);
+  }
+
+  .scene-zero .lead {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .scene-two .caption {
+    top: 5%;
+    max-width: 230px;
+  }
+
+  .scene-two .caption h2 {
+    font-size: clamp(23px, 6vw, 30px);
+  }
+
+  .scene-two .caption p {
+    font-size: 12px;
+  }
+
+  .algo-row {
+    left: 1%;
+    right: 1%;
+    bottom: 2%;
+  }
+
+  .algo-row .card {
+    padding: 9px;
+  }
+
+  #note {
+    display: none;
+  }
+
+  #counter {
+    right: 15px;
+    bottom: 9px;
+  }
+}
+
+/* Short laptop screens / large browser zoom:
+ * prioritize showing the full grid, text and buttons before extra padding.
+ */
+@media (max-height: 620px) and (min-width: 701px) {
+  :host {
+    --rn-header-h: 58px;
+    --rn-bottom-space: 18px;
+  }
+
+  .scene-four .gridbox {
+    height: clamp(75px, 16dvh, 115px);
+    margin-block: 6px;
+  }
+
+  .scene-four .card,
+  .scene-one .card,
+  .scene-three .card {
+    padding-block: 11px;
+  }
+
+  .card p {
+    font-size: 12px;
+    line-height: 1.36;
+  }
+
+  .card h2 {
+    font-size: clamp(22px, 2.5vw, 30px);
+  }
+
+  .scene-four .btns {
+    margin-top: 7px;
+  }
+
+  .scene-four .btn {
+    padding-block: 7px;
+  }
+
+  #scrollHint {
+    bottom: 26px;
+  }
+}
+
+/* Accessible fallback on very short mobile screens or high text zoom. */
+@media (max-height: 500px) {
+  .scene-four .gridbox {
+    height: 70px;
+  }
+
+  .card {
+    border-radius: 12px;
+  }
+
+  .scene-four .card {
+    max-height: calc(100% - 8px);
+  }
+
+  #scrollHint {
+    display: none;
+  }
+}

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import storyHtml from '@/scroll/story.html?raw';
 import storyCss from '@/scroll/story.css?raw';
+import responsiveCss from '@/scroll/responsive.css?raw';
 import setupStory from '@/scroll/story.js';
 
 /**
@@ -79,7 +80,8 @@ export default function ReactScrollHome() {
       @media(max-width:760px){#robonav-next{padding:62px 22px}.next-grid{grid-template-columns:1fr;gap:14px;margin:35px 0}.next-card{min-height:170px;padding:21px;gap:10px}}
     `;
 
-    shadow.innerHTML = '<style>' + storyCss + overrides + nextStyles + '</style>' + storyHtml + nextSections;
+    // CSS order is important: responsive rules override the original fixed scene sizes.
+    shadow.innerHTML = '<style>' + storyCss + overrides + nextStyles + responsiveCss + '</style>' + storyHtml + nextSections;
 
     const cleanup = setupStory(shadow, navigate);
     return () => {

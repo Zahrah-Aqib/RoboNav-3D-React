@@ -84,6 +84,18 @@ export default function setupStory(host, navigate) {
     const range = Math.max(1, root.offsetHeight - window.innerHeight);
     const p = clamp(-rect.top / range);
     const motion=pose(reduced?0:p);
+
+    // On narrow phones the final scene becomes a vertical layout:
+    // the robot glides toward the TOP before the full-width card appears.
+    // Otherwise the robot would cover the text and illustrative map.
+    // We interpolate the adjustment so scrolling remains reversible.
+    if (window.innerWidth <= 700 && !reduced) {
+      const transition = smooth(clamp((p - .78) / .11));
+      motion.x += (.76 - motion.x) * transition;
+      motion.y += (.17 - motion.y) * transition;
+      motion.size += (.73 - motion.size) * transition;
+    }
+
     robot.style.left=(motion.x*100)+'%';
     robot.style.top=(motion.y*100)+'%';
     robot.style.transform='translate(-50%,-50%) scale('+motion.size+')';
